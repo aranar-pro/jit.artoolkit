@@ -6,7 +6,7 @@
 #include "jit.common.h"
 #include "max.jit.mop.h"
 
-typedef struct _max_jit_3m 
+typedef struct _max_jit_artoolkit 
 {
 	t_object			ob;
 	void				*obex;
@@ -14,16 +14,16 @@ typedef struct _max_jit_3m
 	void 				*meanout;
 	void 				*maxout;	
 	t_atom				*av;
-} t_max_jit_3m;
+} t_max_jit_artoolkit;
 
-t_jit_err jit_3m_init(void); 
+t_jit_err jit_artoolkit_init(void); 
 
-void *max_jit_3m_new(t_symbol *s, long argc, t_atom *argv);
-void max_jit_3m_free(t_max_jit_3m *x);
-void max_jit_3m_assist(t_max_jit_3m *x, void *b, long m, long a, char *s);
-void max_jit_3m_bang(t_max_jit_3m *x);
-void max_jit_3m_mproc(t_max_jit_3m *x, void *mop);
-void *max_jit_3m_class;
+void *max_jit_artoolkit_new(t_symbol *s, long argc, t_atom *argv);
+void max_jit_artoolkit_free(t_max_jit_artoolkit *x);
+void max_jit_artoolkit_assist(t_max_jit_artoolkit *x, void *b, long m, long a, char *s);
+void max_jit_artoolkit_bang(t_max_jit_artoolkit *x);
+void max_jit_artoolkit_mproc(t_max_jit_artoolkit *x, void *mop);
+void *max_jit_artoolkit_class;
 
 t_symbol *ps_getmin,*ps_getmean,*ps_getmax;
 		 	
@@ -31,24 +31,24 @@ void C74_EXPORT main(void)
 {	
 	void *p,*q;
 	
-	jit_3m_init();	
-	setup((t_messlist **)&max_jit_3m_class, (method)max_jit_3m_new, (method)max_jit_3m_free, (short)sizeof(t_max_jit_3m), 
+	jit_artoolkit_init();	
+	setup((t_messlist **)&max_jit_artoolkit_class, (method)max_jit_artoolkit_new, (method)max_jit_artoolkit_free, (short)sizeof(t_max_jit_artoolkit), 
 		0L, A_GIMME, 0);
 
-	p = max_jit_classex_setup(calcoffset(t_max_jit_3m,obex));
-	q = jit_class_findbyname(gensym("jit_3m"));    
+	p = max_jit_classex_setup(calcoffset(t_max_jit_artoolkit,obex));
+	q = jit_class_findbyname(gensym("jit_artoolkit"));    
     max_jit_classex_mop_wrap(p,q,MAX_JIT_MOP_FLAGS_OWN_BANG|MAX_JIT_MOP_FLAGS_OWN_OUTPUTMATRIX); //custom bang/outputmatrix 		
-    max_jit_classex_mop_mproc(p,q,max_jit_3m_mproc); 	//custom mproc
+    max_jit_classex_mop_mproc(p,q,max_jit_artoolkit_mproc); 	//custom mproc
     max_jit_classex_standard_wrap(p,q,0); 	
- 	addmess((method)max_jit_3m_assist,			"assist",			A_CANT,0);
- 	addbang((method)max_jit_3m_bang);
+ 	addmess((method)max_jit_artoolkit_assist,			"assist",			A_CANT,0);
+ 	addbang((method)max_jit_artoolkit_bang);
 
 	ps_getmin	= gensym("getmin");
 	ps_getmean	= gensym("getmean");
 	ps_getmax	= gensym("getmax");
 }
 
-void max_jit_3m_bang(t_max_jit_3m *x)
+void max_jit_artoolkit_bang(t_max_jit_artoolkit *x)
 {
 	long ac;
 	void *o;
@@ -89,7 +89,7 @@ void max_jit_3m_bang(t_max_jit_3m *x)
 	}
 }
 
-void max_jit_3m_mproc(t_max_jit_3m *x, void *mop)
+void max_jit_artoolkit_mproc(t_max_jit_artoolkit *x, void *mop)
 {
 	t_jit_err err;
 	
@@ -101,11 +101,11 @@ void max_jit_3m_mproc(t_max_jit_3m *x, void *mop)
 	{
 		jit_error_code(x,err); 
 	} else {
-		max_jit_3m_bang(x);
+		max_jit_artoolkit_bang(x);
 	}
 }
 
-void max_jit_3m_assist(t_max_jit_3m *x, void *b, long m, long a, char *s)
+void max_jit_artoolkit_assist(t_max_jit_artoolkit *x, void *b, long m, long a, char *s)
 {
 	if (m == 1) { //input
 		max_jit_mop_assist(x,b,m,a,s);
@@ -127,7 +127,7 @@ void max_jit_3m_assist(t_max_jit_3m *x, void *b, long m, long a, char *s)
 	}
 }
 
-void max_jit_3m_free(t_max_jit_3m *x)
+void max_jit_artoolkit_free(t_max_jit_artoolkit *x)
 {
 	max_jit_mop_free(x);
 	jit_object_free(max_jit_obex_jitob_get(x));
@@ -136,14 +136,14 @@ void max_jit_3m_free(t_max_jit_3m *x)
 	max_jit_obex_free(x);
 }
 
-void *max_jit_3m_new(t_symbol *s, long argc, t_atom *argv)
+void *max_jit_artoolkit_new(t_symbol *s, long argc, t_atom *argv)
 {
-	t_max_jit_3m *x;
+	t_max_jit_artoolkit *x;
 	void *o;
 
-	if (x=(t_max_jit_3m *)max_jit_obex_new(max_jit_3m_class,gensym("jit_3m"))) {
+	if (x=(t_max_jit_artoolkit *)max_jit_obex_new(max_jit_artoolkit_class,gensym("jit_artoolkit"))) {
 		x->av = NULL;
-		if (o=jit_object_new(gensym("jit_3m"))) {
+		if (o=jit_object_new(gensym("jit_artoolkit"))) {
 			max_jit_mop_setup_simple(x,o,argc,argv);			
 			//add additional non-matrix outputs
 			x->maxout 	= outlet_new(x,0L);	

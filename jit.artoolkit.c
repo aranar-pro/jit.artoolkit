@@ -6,114 +6,114 @@
 #include "jit.common.h"
 #include "ext_systhread.h"
 
-typedef struct _jit_3m_vecdata_char
+typedef struct _jit_artoolkit_vecdata_char
 {
 	long				min[JIT_MATRIX_MAX_PLANECOUNT];
 	long 				mean[JIT_MATRIX_MAX_PLANECOUNT];
 	long 				max[JIT_MATRIX_MAX_PLANECOUNT];
-} t_jit_3m_vecdata_char;
+} t_jit_artoolkit_vecdata_char;
 
-typedef struct _jit_3m_vecdata_long
+typedef struct _jit_artoolkit_vecdata_long
 {
 	long				min[JIT_MATRIX_MAX_PLANECOUNT];
 	double 				mean[JIT_MATRIX_MAX_PLANECOUNT];
 	long				max[JIT_MATRIX_MAX_PLANECOUNT];
-} t_jit_3m_vecdata_long;
+} t_jit_artoolkit_vecdata_long;
 
-typedef struct _jit_3m_vecdata_float32
+typedef struct _jit_artoolkit_vecdata_float32
 {
 	float				min[JIT_MATRIX_MAX_PLANECOUNT];
 	float 				mean[JIT_MATRIX_MAX_PLANECOUNT];
 	float				max[JIT_MATRIX_MAX_PLANECOUNT];
-} t_jit_3m_vecdata_float32;
+} t_jit_artoolkit_vecdata_float32;
 
-typedef struct _jit_3m_vecdata_float64
+typedef struct _jit_artoolkit_vecdata_float64
 {
 	double				min[JIT_MATRIX_MAX_PLANECOUNT];
 	double 				mean[JIT_MATRIX_MAX_PLANECOUNT];
 	double				max[JIT_MATRIX_MAX_PLANECOUNT];
-} t_jit_3m_vecdata_float64;
+} t_jit_artoolkit_vecdata_float64;
 
-typedef struct _jit_3m_vecdata
+typedef struct _jit_artoolkit_vecdata
 {
-	t_jit_3m_vecdata_char 		v_char;
-	t_jit_3m_vecdata_long 		v_long;
-	t_jit_3m_vecdata_float32 	v_float32;
-	t_jit_3m_vecdata_float64 	v_float64;
-} t_jit_3m_vecdata;
+	t_jit_artoolkit_vecdata_char 		v_char;
+	t_jit_artoolkit_vecdata_long 		v_long;
+	t_jit_artoolkit_vecdata_float32 	v_float32;
+	t_jit_artoolkit_vecdata_float64 	v_float64;
+} t_jit_artoolkit_vecdata;
 
-typedef struct _jit_3m 
+typedef struct _jit_artoolkit 
 {
 	t_object	ob;
 	long		planecount;
 	t_atom		min[JIT_MATRIX_MAX_PLANECOUNT];
 	t_atom		mean[JIT_MATRIX_MAX_PLANECOUNT];
 	t_atom		max[JIT_MATRIX_MAX_PLANECOUNT];
-	t_jit_3m_vecdata vd;
+	t_jit_artoolkit_vecdata vd;
 	t_systhread_mutex mutex;
-} t_jit_3m;
+} t_jit_artoolkit;
 
-t_jit_err jit_3m_init(void); 
-t_jit_err jit_3m_matrix_calc(t_jit_3m *x, void *inputs, void *outputs);
+t_jit_err jit_artoolkit_init(void); 
+t_jit_err jit_artoolkit_matrix_calc(t_jit_artoolkit *x, void *inputs, void *outputs);
 
-void *_jit_3m_class;
+void *_jit_artoolkit_class;
 
-t_jit_3m *jit_3m_new(void);
-void jit_3m_free(t_jit_3m *x);
-void jit_3m_precalc(t_jit_3m_vecdata *vecdata, t_jit_matrix_info *in1_minfo, char *bip1); 
-void jit_3m_postcalc(t_jit_3m *x, t_jit_3m_vecdata *vecdata, t_jit_matrix_info *in1_minfo); 
-void jit_3m_mean(t_jit_3m_vecdata *vecdata, t_jit_matrix_info *in1_minfo); 
-void jit_3m_calculate_ndim(t_jit_3m *x, long dimcount, long *dim, long planecount, 
+t_jit_artoolkit *jit_artoolkit_new(void);
+void jit_artoolkit_free(t_jit_artoolkit *x);
+void jit_artoolkit_precalc(t_jit_artoolkit_vecdata *vecdata, t_jit_matrix_info *in1_minfo, char *bip1); 
+void jit_artoolkit_postcalc(t_jit_artoolkit *x, t_jit_artoolkit_vecdata *vecdata, t_jit_matrix_info *in1_minfo); 
+void jit_artoolkit_mean(t_jit_artoolkit_vecdata *vecdata, t_jit_matrix_info *in1_minfo); 
+void jit_artoolkit_calculate_ndim(t_jit_artoolkit *x, long dimcount, long *dim, long planecount, 
 	t_jit_matrix_info *in1_minfo, char *bip1);
-void jit_3m_vector_char(long n, t_jit_op_info *in1, long *min, long *mean, long *max); 
-void jit_3m_vector_long(long n, t_jit_op_info *in1, long *min, double *mean, long *max);
-void jit_3m_vector_float32(long n, t_jit_op_info *in1, float *min, float *mean, float *max);
-void jit_3m_vector_float64(long n, t_jit_op_info *in1, double *min, double *mean, double *max);;
+void jit_artoolkit_vector_char(long n, t_jit_op_info *in1, long *min, long *mean, long *max); 
+void jit_artoolkit_vector_long(long n, t_jit_op_info *in1, long *min, double *mean, long *max);
+void jit_artoolkit_vector_float32(long n, t_jit_op_info *in1, float *min, float *mean, float *max);
+void jit_artoolkit_vector_float64(long n, t_jit_op_info *in1, double *min, double *mean, double *max);;
 
-t_jit_err jit_3m_init(void) 
+t_jit_err jit_artoolkit_init(void) 
 {
 	long attrflags=0;
 	t_jit_object *attr,*mop;
 	
-	_jit_3m_class = jit_class_new("jit_3m",(method)jit_3m_new,(method)jit_3m_free,
-		sizeof(t_jit_3m),0L);
+	_jit_artoolkit_class = jit_class_new("jit_artoolkit",(method)jit_artoolkit_new,(method)jit_artoolkit_free,
+		sizeof(t_jit_artoolkit),0L);
 
 	//add mop
 	mop = jit_object_new(_jit_sym_jit_mop,1,0);
-	jit_class_addadornment(_jit_3m_class,mop);
+	jit_class_addadornment(_jit_artoolkit_class,mop);
 	//add methods
-	jit_class_addmethod(_jit_3m_class, (method)jit_3m_matrix_calc, 		"matrix_calc", 		A_CANT, 0L);
+	jit_class_addmethod(_jit_artoolkit_class, (method)jit_artoolkit_matrix_calc, 		"matrix_calc", 		A_CANT, 0L);
 	//add attributes	
 	attrflags = JIT_ATTR_SET_OPAQUE_USER | JIT_ATTR_GET_DEFER_LOW;
 
-	CLASS_STICKY_CATEGORY(_jit_3m_class,0,"Value");
+	CLASS_STICKY_CATEGORY(_jit_artoolkit_class,0,"Value");
 
 	attr = jit_object_new(_jit_sym_jit_attr_offset_array,"min",_jit_sym_atom,JIT_MATRIX_MAX_PLANECOUNT,attrflags,
-		(method)0L,(method)0L,calcoffset(t_jit_3m,planecount),calcoffset(t_jit_3m,min));
-	jit_class_addattr(_jit_3m_class,attr);
-	CLASS_ATTR_BASIC(_jit_3m_class,"min",0);
-	CLASS_ATTR_LABEL(_jit_3m_class,"min",0,"Minimum");
+		(method)0L,(method)0L,calcoffset(t_jit_artoolkit,planecount),calcoffset(t_jit_artoolkit,min));
+	jit_class_addattr(_jit_artoolkit_class,attr);
+	CLASS_ATTR_BASIC(_jit_artoolkit_class,"min",0);
+	CLASS_ATTR_LABEL(_jit_artoolkit_class,"min",0,"Minimum");
 
 	attr = jit_object_new(_jit_sym_jit_attr_offset_array,"mean",_jit_sym_atom,JIT_MATRIX_MAX_PLANECOUNT,attrflags,
-		(method)0L,(method)0L,calcoffset(t_jit_3m,planecount),calcoffset(t_jit_3m,mean));
-	jit_class_addattr(_jit_3m_class,attr);
-	CLASS_ATTR_BASIC(_jit_3m_class,"mean",0);
-	CLASS_ATTR_LABEL(_jit_3m_class,"mean",0,"Mean");
+		(method)0L,(method)0L,calcoffset(t_jit_artoolkit,planecount),calcoffset(t_jit_artoolkit,mean));
+	jit_class_addattr(_jit_artoolkit_class,attr);
+	CLASS_ATTR_BASIC(_jit_artoolkit_class,"mean",0);
+	CLASS_ATTR_LABEL(_jit_artoolkit_class,"mean",0,"Mean");
 
 	attr = jit_object_new(_jit_sym_jit_attr_offset_array,"max",_jit_sym_atom,JIT_MATRIX_MAX_PLANECOUNT,attrflags,
-		(method)0L,(method)0L,calcoffset(t_jit_3m,planecount),calcoffset(t_jit_3m,max));
-	jit_class_addattr(_jit_3m_class,attr);
-	CLASS_ATTR_BASIC(_jit_3m_class,"max",0);
-	CLASS_ATTR_LABEL(_jit_3m_class,"max",0,"Maximum");
+		(method)0L,(method)0L,calcoffset(t_jit_artoolkit,planecount),calcoffset(t_jit_artoolkit,max));
+	jit_class_addattr(_jit_artoolkit_class,attr);
+	CLASS_ATTR_BASIC(_jit_artoolkit_class,"max",0);
+	CLASS_ATTR_LABEL(_jit_artoolkit_class,"max",0,"Maximum");
 	
-	CLASS_STICKY_CATEGORY_CLEAR(_jit_3m_class);
+	CLASS_STICKY_CATEGORY_CLEAR(_jit_artoolkit_class);
 	
-	jit_class_register(_jit_3m_class);
+	jit_class_register(_jit_artoolkit_class);
 
 	return JIT_ERR_NONE;
 }
 
-t_jit_err jit_3m_matrix_calc(t_jit_3m *x, void *inputs, void *outputs)
+t_jit_err jit_artoolkit_matrix_calc(t_jit_artoolkit *x, void *inputs, void *outputs)
 {
 	t_jit_err err=JIT_ERR_NONE;
 	long in_savelock;
@@ -140,12 +140,12 @@ t_jit_err jit_3m_matrix_calc(t_jit_3m *x, void *inputs, void *outputs)
 		}		
 		
 		//calculate
-		jit_3m_precalc(&x->vd, &in_minfo, in_bp);
-		jit_parallel_ndim_simplecalc1((method)jit_3m_calculate_ndim, 
+		jit_artoolkit_precalc(&x->vd, &in_minfo, in_bp);
+		jit_parallel_ndim_simplecalc1((method)jit_artoolkit_calculate_ndim, 
 			x, dimcount, dim, in_minfo.planecount, &in_minfo, in_bp,
 			0 /* flags1 */);
-		jit_3m_mean(&x->vd, &in_minfo);
-		jit_3m_postcalc(x, &x->vd, &in_minfo);
+		jit_artoolkit_mean(&x->vd, &in_minfo);
+		jit_artoolkit_postcalc(x, &x->vd, &in_minfo);
 		
 	} else {
 		return JIT_ERR_INVALID_PTR;
@@ -156,7 +156,7 @@ out:
 	return err;
 }
 
-void jit_3m_precalc(t_jit_3m_vecdata *vecdata, t_jit_matrix_info *in1_minfo, char *bip1) 
+void jit_artoolkit_precalc(t_jit_artoolkit_vecdata *vecdata, t_jit_matrix_info *in1_minfo, char *bip1) 
 {
 	long i;
 	
@@ -187,7 +187,7 @@ void jit_3m_precalc(t_jit_3m_vecdata *vecdata, t_jit_matrix_info *in1_minfo, cha
 	} 
 }
 
-void jit_3m_postcalc(t_jit_3m *x, t_jit_3m_vecdata *vecdata, t_jit_matrix_info *in1_minfo) 
+void jit_artoolkit_postcalc(t_jit_artoolkit *x, t_jit_artoolkit_vecdata *vecdata, t_jit_matrix_info *in1_minfo) 
 {
 	long i;
 	
@@ -220,7 +220,7 @@ void jit_3m_postcalc(t_jit_3m *x, t_jit_3m_vecdata *vecdata, t_jit_matrix_info *
 	}
 }
 
-void jit_3m_mean(t_jit_3m_vecdata *vecdata, t_jit_matrix_info *in1_minfo) 
+void jit_artoolkit_mean(t_jit_artoolkit_vecdata *vecdata, t_jit_matrix_info *in1_minfo) 
 {
 	long count=1;
 	long i;
@@ -250,13 +250,13 @@ void jit_3m_mean(t_jit_3m_vecdata *vecdata, t_jit_matrix_info *in1_minfo)
 
 
 //recursive function to handle higher dimension matrices, by processing 2D sections at a time 
-void jit_3m_calculate_ndim(t_jit_3m *x, long dimcount, long *dim, long planecount, 
+void jit_artoolkit_calculate_ndim(t_jit_artoolkit *x, long dimcount, long *dim, long planecount, 
 	t_jit_matrix_info *in1_minfo, char *bip1)
 {
 	long i,j,n;
 	char *ip1;
 	t_jit_op_info in1_opinfo;
-	t_jit_3m_vecdata vecdata;
+	t_jit_artoolkit_vecdata vecdata;
 		
 	if (dimcount<1) return; //safety
 	
@@ -264,14 +264,14 @@ void jit_3m_calculate_ndim(t_jit_3m *x, long dimcount, long *dim, long planecoun
 	case 1:
 		dim[1] = 1;
 	case 2:
-		jit_3m_precalc(&vecdata,in1_minfo,bip1); //parallel moved thread local
+		jit_artoolkit_precalc(&vecdata,in1_minfo,bip1); //parallel moved thread local
 		n = dim[0];
 		in1_opinfo.stride = in1_minfo->dim[0]>1?planecount:0;
 		if (in1_minfo->type==_jit_sym_char) {
 			for (i=0;i<dim[1];i++){
 				for (j=0;j<planecount;j++) {
 					in1_opinfo.p = bip1 + i*in1_minfo->dimstride[1] + j;
-					jit_3m_vector_char(n,&in1_opinfo,&(vecdata.v_char.min[j]),
+					jit_artoolkit_vector_char(n,&in1_opinfo,&(vecdata.v_char.min[j]),
 						&(vecdata.v_char.mean[j]),&(vecdata.v_char.max[j]));
 				}
 			}
@@ -289,7 +289,7 @@ void jit_3m_calculate_ndim(t_jit_3m *x, long dimcount, long *dim, long planecoun
 			for (i=0;i<dim[1];i++){
 				for (j=0;j<planecount;j++) {
 					in1_opinfo.p = bip1 + i*in1_minfo->dimstride[1] + j*4;
-					jit_3m_vector_long(n,&in1_opinfo,&(vecdata.v_long.min[j]),
+					jit_artoolkit_vector_long(n,&in1_opinfo,&(vecdata.v_long.min[j]),
 						&(vecdata.v_long.mean[j]),&(vecdata.v_long.max[j]));
 				}
 			}
@@ -307,7 +307,7 @@ void jit_3m_calculate_ndim(t_jit_3m *x, long dimcount, long *dim, long planecoun
 			for (i=0;i<dim[1];i++){
 				for (j=0;j<planecount;j++) {
 					in1_opinfo.p = bip1 + i*in1_minfo->dimstride[1] + j*4;
-					jit_3m_vector_float32(n,&in1_opinfo,&(vecdata.v_float32.min[j]),
+					jit_artoolkit_vector_float32(n,&in1_opinfo,&(vecdata.v_float32.min[j]),
 						&(vecdata.v_float32.mean[j]),&(vecdata.v_float32.max[j]));
 				}
 			}
@@ -325,7 +325,7 @@ void jit_3m_calculate_ndim(t_jit_3m *x, long dimcount, long *dim, long planecoun
 			for (i=0;i<dim[1];i++){
 				for (j=0;j<planecount;j++) {
 					in1_opinfo.p = bip1 + i*in1_minfo->dimstride[1] + j*8;
-					jit_3m_vector_float64(n,&in1_opinfo,&(vecdata.v_float64.min[j]),
+					jit_artoolkit_vector_float64(n,&in1_opinfo,&(vecdata.v_float64.min[j]),
 						&(vecdata.v_float64.mean[j]),&(vecdata.v_float64.max[j]));
 				}
 			}
@@ -344,13 +344,13 @@ void jit_3m_calculate_ndim(t_jit_3m *x, long dimcount, long *dim, long planecoun
 	default:
 		for	(i=0;i<dim[dimcount-1];i++) {
 			ip1 = bip1 + i*in1_minfo->dimstride[dimcount-1];
-			jit_3m_calculate_ndim(x,dimcount-1,dim,planecount,in1_minfo,ip1);
+			jit_artoolkit_calculate_ndim(x,dimcount-1,dim,planecount,in1_minfo,ip1);
 		}
 	}
 }
 
 //outmatrix is guaranteed to be no smaller than 256 elements so no need to test ip1 for 0-maxsize
-void jit_3m_vector_char(long n, t_jit_op_info *in1, long *min, long *mean, long *max) 
+void jit_artoolkit_vector_char(long n, t_jit_op_info *in1, long *min, long *mean, long *max) 
 {
 	uchar *ip1;
 	long tmp;
@@ -369,7 +369,7 @@ void jit_3m_vector_char(long n, t_jit_op_info *in1, long *min, long *mean, long 
 	}
 }
 
-void jit_3m_vector_long(long n, t_jit_op_info *in1, long *min, double *mean, long *max) 
+void jit_artoolkit_vector_long(long n, t_jit_op_info *in1, long *min, double *mean, long *max) 
 {
 	t_int32 *ip1,tmp;
 	long is1;
@@ -387,7 +387,7 @@ void jit_3m_vector_long(long n, t_jit_op_info *in1, long *min, double *mean, lon
 	}
 }
 
-void jit_3m_vector_float32(long n, t_jit_op_info *in1, float *min, float *mean, float *max) 
+void jit_artoolkit_vector_float32(long n, t_jit_op_info *in1, float *min, float *mean, float *max) 
 {
 	float *ip1,tmp;
 	long is1;
@@ -405,7 +405,7 @@ void jit_3m_vector_float32(long n, t_jit_op_info *in1, float *min, float *mean, 
 	}
 }
 
-void jit_3m_vector_float64(long n, t_jit_op_info *in1, double *min, double *mean, double *max) 
+void jit_artoolkit_vector_float64(long n, t_jit_op_info *in1, double *min, double *mean, double *max) 
 {
 	double *ip1,tmp;
 	long is1;
@@ -423,11 +423,11 @@ void jit_3m_vector_float64(long n, t_jit_op_info *in1, double *min, double *mean
 	}
 }
 
-t_jit_3m *jit_3m_new(void)
+t_jit_artoolkit *jit_artoolkit_new(void)
 {
-	t_jit_3m *x;
+	t_jit_artoolkit *x;
 		
-	if (x=(t_jit_3m *)jit_object_alloc(_jit_3m_class)) {
+	if (x=(t_jit_artoolkit *)jit_object_alloc(_jit_artoolkit_class)) {
 		x->planecount = 0;
 		systhread_mutex_new(&x->mutex,0);
 	} else {
@@ -436,7 +436,7 @@ t_jit_3m *jit_3m_new(void)
 	return x;
 }
 
-void jit_3m_free(t_jit_3m *x)
+void jit_artoolkit_free(t_jit_artoolkit *x)
 {
 	systhread_mutex_free(x->mutex);
 }
